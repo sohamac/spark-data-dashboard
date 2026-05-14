@@ -1,0 +1,288 @@
+/* ═══════════════════════════════════════════════════════════════
+   Spark Data Dashboard — Custom Styles
+   Dark glassmorphism theme
+═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Root Variables ─────────────────────────────────────────── */
+:root {
+  --accent:    #6366f1;
+  --accent2:   #22d3ee;
+  --success:   #10b981;
+  --warning:   #f59e0b;
+  --danger:    #ef4444;
+  --bg-base:   #0d0d1a;
+  --bg-card:   #1e1e2e;
+  --bg-inner:  #13131f;
+  --text:      #e2e8f0;
+  --muted:     #64748b;
+  --border:    #2d2d4e;
+  --radius:    12px;
+  --shadow:    0 4px 24px rgba(0,0,0,0.5);
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg-base) !important;
+  color: var(--text) !important;
+  font-family: 'Inter', sans-serif !important;
+  min-height: 100vh;
+}
+
+/* ── App Shell ──────────────────────────────────────────────── */
+#app-shell {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 20% 0%, rgba(99,102,241,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 60%),
+              var(--bg-base);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.dash-header {
+  padding: 24px 0 0;
+  margin-bottom: 8px;
+}
+
+.header-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16,185,129,0.15);
+  color: var(--success);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ── Tabs ───────────────────────────────────────────────────── */
+.nav-tabs {
+  border-bottom: 1px solid var(--border) !important;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+  color: var(--muted) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--radius) var(--radius) 0 0 !important;
+  padding: 10px 20px !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--text) !important;
+  background: rgba(99,102,241,0.08) !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--accent) !important;
+  background: rgba(99,102,241,0.12) !important;
+  border-color: var(--border) var(--border) var(--bg-base) !important;
+}
+
+/* ── Filter Card ────────────────────────────────────────────── */
+.filter-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px !important;
+}
+
+.filter-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Dropdown overrides */
+.Select-control, .dash-dropdown .Select-control {
+  background: var(--bg-inner) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text) !important;
+}
+.Select-menu-outer, .Select-option {
+  background: var(--bg-inner) !important;
+  color: var(--text) !important;
+}
+.Select-option:hover, .Select-option.is-focused {
+  background: rgba(99,102,241,0.2) !important;
+}
+.Select-value-label { color: var(--text) !important; }
+.Select-arrow { border-top-color: var(--muted) !important; }
+
+/* DatePicker overrides */
+.DateRangePickerInput, .DateInput_input {
+  background: var(--bg-inner) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+}
+
+.reset-btn {
+  border-color: var(--border) !important;
+  color: var(--muted) !important;
+  font-size: 0.8rem !important;
+  border-radius: 8px !important;
+  height: 38px;
+  width: 100%;
+}
+.reset-btn:hover {
+  background: var(--bg-inner) !important;
+  color: var(--text) !important;
+}
+
+/* ── Dash Card ──────────────────────────────────────────────── */
+.dash-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+  height: 100%;
+  transition: border-color 0.2s ease;
+}
+.dash-card:hover { border-color: rgba(99,102,241,0.4) !important; }
+.dash-card .card-body { padding: 20px !important; }
+
+/* ── KPI Cards ──────────────────────────────────────────────── */
+.kpi-card {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-inner)) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(99,102,241,0.5) !important;
+}
+
+.kpi-inner {
+  display: flex;
+  align-items: center;
+}
+
+.kpi-title {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.kpi-delta {
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* ── Section Headers ────────────────────────────────────────── */
+.section-header { margin-bottom: 14px; }
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.section-subtitle {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ── Table ──────────────────────────────────────────────────── */
+.table-wrapper { overflow-x: auto; }
+.dash-table { color: var(--text) !important; font-size: 0.85rem; }
+.dash-table thead tr th {
+  background: var(--bg-inner) !important;
+  color: var(--muted) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 10px 12px !important;
+}
+.dash-table tbody tr td {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(45,45,78,0.6) !important;
+  padding: 10px 12px !important;
+  vertical-align: middle;
+}
+.dash-table tbody tr:hover td { background: rgba(99,102,241,0.07) !important; }
+
+/* ── Loading Spinners ───────────────────────────────────────── */
+._dash-loading { min-height: 200px; }
+
+/* ── Responsive tweaks ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .kpi-value { font-size: 1.2rem; }
+  .nav-tabs .nav-link { padding: 8px 14px !important; font-size: 0.8rem; }
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
