@@ -103,7 +103,7 @@ def main():
     
     try:
         while True:
-            logger.info("--- New Batch ---")
+            logger.info("Processing new batch...")
             raw_data = fetch_live_data()
             success = process_and_store(spark, raw_data)
             

@@ -1,4 +1,4 @@
-# ⚡ Spark Data Dashboard
+# Spark Data Dashboard
 
 <div align="center">
 
@@ -13,7 +13,7 @@
 
 ---
 
-## 📸 Preview
+## Preview
 
 ### Overview Tab — KPI Cards + Revenue Trend
 > 4 KPI metric cards, revenue time-series with Spark rolling window average, region breakdown, and category donut chart.
@@ -26,7 +26,7 @@
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -53,7 +53,7 @@
 
 ---
 
-## ✨ Features
+## Features
 
 ### Data Processing (Spark)
 | Spark Feature | Used For |
@@ -78,7 +78,7 @@
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 spark-dashboard/
@@ -101,14 +101,14 @@ spark-dashboard/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
 | Requirement | Version | Notes |
 |---|---|---|
 | Python | 3.9+ | |
-| Java | **11** (LTS) | ⚠️ PySpark 3.5 is incompatible with Java 21+ |
+| Java | **11** (LTS) | PySpark 3.5 is incompatible with Java 21+ |
 | pip | Latest | |
 
 Download Java 11: [Adoptium Temurin 11](https://adoptium.net/temurin/releases/?version=11)
@@ -145,7 +145,7 @@ python app.py
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -159,7 +159,7 @@ python app.py
 
 ---
 
-## ⚠️ Known Limitations
+## Known Limitations
 
 - **Java 11 required** — PySpark 3.5.x uses `javax.security.auth.Subject.getSubject()` which was removed in Java 21. Always run with Java 11.
 - **Local mode only** — Runs Spark in `local[*]` mode; not configured for a cluster.
@@ -167,12 +167,12 @@ python app.py
 
 ---
 
-## 📄 License
+## License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
 <div align="center">
-Built with ⚡ Apache Spark · 📊 Plotly Dash · 🐍 Python
+Built with Apache Spark · Plotly Dash · Python
 </div>
