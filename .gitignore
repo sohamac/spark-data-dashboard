@@ -49,3 +49,7 @@ Icon
 
 # Logs
 *.log
+
+# Databases
+*.db
+crypto_data.db

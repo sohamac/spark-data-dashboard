@@ -7,23 +7,27 @@
 
 /* ── Root Variables ─────────────────────────────────────────── */
 :root {
-  --accent:    #6366f1;
-  --accent2:   #22d3ee;
-  --success:   #10b981;
-  --warning:   #f59e0b;
-  --danger:    #ef4444;
-  --bg-base:   #0d0d1a;
-  --bg-card:   #1e1e2e;
-  --bg-inner:  #13131f;
-  --text:      #e2e8f0;
-  --muted:     #64748b;
-  --border:    #2d2d4e;
-  --radius:    12px;
-  --shadow:    0 4px 24px rgba(0,0,0,0.5);
+  --accent: #6366f1;
+  --accent2: #22d3ee;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-base: #0d0d1a;
+  --bg-card: #1e1e2e;
+  --bg-inner: #13131f;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --border: #2d2d4e;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
 }
 
 /* ── Base ───────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
   background: var(--bg-base) !important;
@@ -35,9 +39,9 @@ body {
 /* ── App Shell ──────────────────────────────────────────────── */
 #app-shell {
   min-height: 100vh;
-  background: radial-gradient(ellipse at 20% 0%, rgba(99,102,241,0.12) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 60%),
-              var(--bg-base);
+  background: radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(34, 211, 238, 0.08) 0%, transparent 60%),
+    var(--bg-base);
 }
 
 /* ── Header ─────────────────────────────────────────────────── */
@@ -66,9 +70,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(16,185,129,0.15);
+  background: rgba(16, 185, 129, 0.15);
   color: var(--success);
-  border: 1px solid rgba(16,185,129,0.3);
+  border: 1px solid rgba(16, 185, 129, 0.3);
   border-radius: 20px;
   padding: 4px 12px;
   font-size: 0.75rem;
@@ -84,8 +88,17 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.8); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
 }
 
 /* ── Tabs ───────────────────────────────────────────────────── */
@@ -108,12 +121,12 @@ body {
 
 .nav-tabs .nav-link:hover {
   color: var(--text) !important;
-  background: rgba(99,102,241,0.08) !important;
+  background: rgba(99, 102, 241, 0.08) !important;
 }
 
 .nav-tabs .nav-link.active {
   color: var(--accent) !important;
-  background: rgba(99,102,241,0.12) !important;
+  background: rgba(99, 102, 241, 0.12) !important;
   border-color: var(--border) var(--border) var(--bg-base) !important;
 }
 
@@ -137,27 +150,60 @@ body {
 }
 
 /* Dropdown overrides */
-.Select-control, .dash-dropdown .Select-control {
-  background: var(--bg-inner) !important;
+.dash-dropdown .Select-control,
+.Select-control {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
   border: 1px solid var(--border) !important;
   border-radius: 8px !important;
-  color: var(--text) !important;
+  color: #000000 !important;
 }
-.Select-menu-outer, .Select-option {
-  background: var(--bg-inner) !important;
-  color: var(--text) !important;
+
+.dash-dropdown .Select-value,
+.dash-dropdown .Select-value-label {
+  color: #000000 !important;
 }
-.Select-option:hover, .Select-option.is-focused {
-  background: rgba(99,102,241,0.2) !important;
+
+.dash-dropdown .Select-menu-outer,
+.dash-dropdown .Select-option {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
 }
-.Select-value-label { color: var(--text) !important; }
-.Select-arrow { border-top-color: var(--muted) !important; }
+
+.dash-dropdown .Select-option:hover,
+.dash-dropdown .Select-option.is-focused {
+  background-color: #f1f5f9 !important;
+}
+
+.dash-dropdown .Select-arrow {
+  border-top-color: var(--muted) !important;
+}
+
+/* Aggressively target the text in Dropdown to be visible */
+.dash-dropdown .Select-input input,
+.dash-dropdown *,
+.date-picker * {
+  color: #000000 !important;
+}
+
+.has-value.Select--single>.Select-control .Select-value .Select-value-label,
+.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
+  color: #000000 !important;
+}
 
 /* DatePicker overrides */
-.DateRangePickerInput, .DateInput_input {
-  background: var(--bg-inner) !important;
-  color: var(--text) !important;
+.DateRangePickerInput,
+.DateInput,
+.DateInput_input,
+.dash-datepicker-input {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
   border-color: var(--border) !important;
+}
+
+.DateInput_input, .dash-datepicker-input {
   border-radius: 8px !important;
   font-size: 0.875rem !important;
 }
@@ -170,6 +216,7 @@ body {
   height: 38px;
   width: 100%;
 }
+
 .reset-btn:hover {
   background: var(--bg-inner) !important;
   color: var(--text) !important;
@@ -184,8 +231,14 @@ body {
   height: 100%;
   transition: border-color 0.2s ease;
 }
-.dash-card:hover { border-color: rgba(99,102,241,0.4) !important; }
-.dash-card .card-body { padding: 20px !important; }
+
+.dash-card:hover {
+  border-color: rgba(99, 102, 241, 0.4) !important;
+}
+
+.dash-card .card-body {
+  padding: 20px !important;
+}
 
 /* ── KPI Cards ──────────────────────────────────────────────── */
 .kpi-card {
@@ -201,14 +254,16 @@ body {
 .kpi-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--accent), var(--accent2));
 }
 
 .kpi-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(99,102,241,0.5) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
 }
 
 .kpi-inner {
@@ -238,13 +293,17 @@ body {
 }
 
 /* ── Section Headers ────────────────────────────────────────── */
-.section-header { margin-bottom: 14px; }
+.section-header {
+  margin-bottom: 14px;
+}
+
 .section-title {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 2px;
 }
+
 .section-subtitle {
   font-size: 0.75rem;
   color: var(--muted);
@@ -252,8 +311,15 @@ body {
 }
 
 /* ── Table ──────────────────────────────────────────────────── */
-.table-wrapper { overflow-x: auto; }
-.dash-table { color: var(--text) !important; font-size: 0.85rem; }
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.dash-table {
+  color: var(--text) !important;
+  font-size: 0.85rem;
+}
+
 .dash-table thead tr th {
   background: var(--bg-inner) !important;
   color: var(--muted) !important;
@@ -264,25 +330,50 @@ body {
   border-bottom: 1px solid var(--border) !important;
   padding: 10px 12px !important;
 }
+
 .dash-table tbody tr td {
   background: transparent !important;
-  border-bottom: 1px solid rgba(45,45,78,0.6) !important;
+  border-bottom: 1px solid rgba(45, 45, 78, 0.6) !important;
   padding: 10px 12px !important;
   vertical-align: middle;
 }
-.dash-table tbody tr:hover td { background: rgba(99,102,241,0.07) !important; }
+
+.dash-table tbody tr:hover td {
+  background: rgba(99, 102, 241, 0.07) !important;
+}
 
 /* ── Loading Spinners ───────────────────────────────────────── */
-._dash-loading { min-height: 200px; }
+._dash-loading {
+  min-height: 200px;
+}
 
 /* ── Responsive tweaks ──────────────────────────────────────── */
 @media (max-width: 768px) {
-  .kpi-value { font-size: 1.2rem; }
-  .nav-tabs .nav-link { padding: 8px 14px !important; font-size: 0.8rem; }
+  .kpi-value {
+    font-size: 1.2rem;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 8px 14px !important;
+    font-size: 0.8rem;
+  }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-base); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
