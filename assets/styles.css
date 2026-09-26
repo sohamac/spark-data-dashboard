@@ -1,11 +1,11 @@
-/* ═══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    Spark Data Dashboard — Custom Styles
    Dark glassmorphism theme
-═══════════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ── Root Variables ─────────────────────────────────────────── */
+/* ── Root Variables ─────────────────────────────────────── */
 :root {
   --accent: #6366f1;
   --accent2: #22d3ee;
@@ -44,7 +44,7 @@ body {
     var(--bg-base);
 }
 
-/* ── Header ─────────────────────────────────────────────────── */
+/* ── Header ──────────────────────────────────────────────── */
 .dash-header {
   padding: 24px 0 0;
   margin-bottom: 8px;
@@ -101,7 +101,7 @@ body {
   }
 }
 
-/* ── Tabs ───────────────────────────────────────────────────── */
+/* ── Tabs ──────────────────────────────────────────────── */
 .nav-tabs {
   border-bottom: 1px solid var(--border) !important;
   gap: 4px;
@@ -130,7 +130,7 @@ body {
   border-color: var(--border) var(--border) var(--bg-base) !important;
 }
 
-/* ── Filter Card ────────────────────────────────────────────── */
+/* ── Filter Card ──────────────────────────────────────────── */
 .filter-card {
   background: var(--bg-card) !important;
   border: 1px solid var(--border) !important;
@@ -149,61 +149,66 @@ body {
   display: block;
 }
 
-/* Dropdown overrides */
+/* Dropdown overrides -- uses the same dark colors as the rest of the
+   dashboard (var(--bg-inner) for background, var(--text) for text) instead
+   of hardcoded white/black, so these controls match the dark theme. */
 .dash-dropdown .Select-control,
 .Select-control {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
+  background-color: var(--bg-inner) !important;
+  background: var(--bg-inner) !important;
   border: 1px solid var(--border) !important;
   border-radius: 8px !important;
-  color: #000000 !important;
+  color: var(--text) !important;
 }
 
 .dash-dropdown .Select-value,
 .dash-dropdown .Select-value-label {
-  color: #000000 !important;
+  color: var(--text) !important;
 }
 
 .dash-dropdown .Select-menu-outer,
 .dash-dropdown .Select-option {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  background-color: var(--bg-inner) !important;
+  background: var(--bg-inner) !important;
+  color: var(--text) !important;
 }
 
 .dash-dropdown .Select-option:hover,
 .dash-dropdown .Select-option.is-focused {
-  background-color: #f1f5f9 !important;
+  background-color: rgba(99, 102, 241, 0.2) !important;
 }
 
 .dash-dropdown .Select-arrow {
   border-top-color: var(--muted) !important;
 }
 
-/* Aggressively target the text in Dropdown to be visible */
+/* Force text color on every element inside the dropdown/date-picker,
+   since the underlying widgets set their own text color in a few places
+   that the rules above alone don't reach. */
 .dash-dropdown .Select-input input,
 .dash-dropdown *,
 .date-picker * {
-  color: #000000 !important;
+  color: var(--text) !important;
 }
 
 .has-value.Select--single>.Select-control .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
-  color: #000000 !important;
+  color: var(--text) !important;
 }
 
-/* DatePicker overrides */
+/* DatePicker overrides -- same dark theme colors as the dropdown above */
 .DateRangePickerInput,
 .DateInput,
 .DateInput_input,
 .dash-datepicker-input {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  background-color: var(--bg-inner) !important;
+  background: var(--bg-inner) !important;
+  color: var(--text) !important;
   border-color: var(--border) !important;
 }
 
-.DateInput_input, .dash-datepicker-input {
+.DateInput_input,
+.dash-datepicker-input {
   border-radius: 8px !important;
   font-size: 0.875rem !important;
 }
@@ -222,7 +227,7 @@ body {
   color: var(--text) !important;
 }
 
-/* ── Dash Card ──────────────────────────────────────────────── */
+/* ── Dash Card ─────────────────────────────────────────────── */
 .dash-card {
   background: var(--bg-card) !important;
   border: 1px solid var(--border) !important;
@@ -240,7 +245,7 @@ body {
   padding: 20px !important;
 }
 
-/* ── KPI Cards ──────────────────────────────────────────────── */
+/* ── KPI Cards ────────────────────────────────────────────── */
 .kpi-card {
   background: linear-gradient(135deg, var(--bg-card), var(--bg-inner)) !important;
   border: 1px solid var(--border) !important;
@@ -292,7 +297,7 @@ body {
   font-weight: 500;
 }
 
-/* ── Section Headers ────────────────────────────────────────── */
+/* ── Section Headers ───────────────────────────────────────── */
 .section-header {
   margin-bottom: 14px;
 }
@@ -310,7 +315,7 @@ body {
   margin: 0;
 }
 
-/* ── Table ──────────────────────────────────────────────────── */
+/* ── Table ────────────────────────────────────────────────── */
 .table-wrapper {
   overflow-x: auto;
 }
@@ -359,7 +364,7 @@ body {
   }
 }
 
-/* ── Scrollbar ──────────────────────────────────────────────── */
+/* ── Scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
