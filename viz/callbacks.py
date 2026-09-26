@@ -30,6 +30,16 @@ def register_callbacks(app: dash.Dash) -> None:
         sess_raw= app_state["sess"]
         inv_raw = app_state["inv"]
 
+        # Crypto tab reads pipeline.py's live SQLite output fresh on every
+        # render instead of the cached e-commerce DataFrames -- it isn't
+        # subject to the region/category/date filters above, since those
+        # only apply to the synthetic e-commerce data.
+        if active_tab == "tab-crypto":
+            crypto_raw = T.load_crypto_metrics(spark)
+            snapshot_df = T.crypto_latest_snapshot(crypto_raw)
+            history_df = T.crypto_price_history(crypto_raw)
+            return layouts.build_crypto(snapshot_df, history_df)
+
         # Apply user filters via Spark
         txn, sess = T.apply_filters(txn_raw, sess_raw, start_date, end_date, region, category)
 

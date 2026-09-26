@@ -1,6 +1,6 @@
 """
-Dash page layouts for the three tabs.
-All charts are built from Pandas DataFrames returned by spark transforms.
+Dash page layouts for the four tabs.
+Most charts are built from Pandas DataFrames returned by spark transforms.
 """
 import plotly.express as px
 import plotly.graph_objects as go
@@ -39,10 +39,10 @@ def build_overview(kpis: dict, rev_time: pd.DataFrame,
 
     # ── KPI row ──
     kpi_row = dbc.Row([
-        kpi_card("Total Revenue",    f"${kpis['total_revenue']:,.0f}",   icon="💰", color=ACCENT),
-        kpi_card("Total Orders",     f"{kpis['total_orders']:,}",         icon="🛒", color=ACCENT2),
-        kpi_card("Avg Order Value",  f"${kpis['avg_order_value']:,.2f}",  icon="📦", color=SUCCESS),
-        kpi_card("Conversion Rate",  f"{kpis['conversion_rate']}%",       icon="🎯", color=WARNING),
+        kpi_card("Total Revenue",    f"${kpis['total_revenue']:,.0f}",   icon="\U0001F4B0", color=ACCENT),
+        kpi_card("Total Orders",     f"{kpis['total_orders']:,}",         icon="\U0001F6D2", color=ACCENT2),
+        kpi_card("Avg Order Value",  f"${kpis['avg_order_value']:,.2f}",  icon="\U0001F4E6", color=SUCCESS),
+        kpi_card("Conversion Rate",  f"{kpis['conversion_rate']}%",       icon="\U0001F3AF", color=WARNING),
     ], className="mb-3 g-3")
 
     # ── Revenue over time ──
@@ -261,6 +261,88 @@ def build_deep_dive(scatter_df: pd.DataFrame, top_df: pd.DataFrame,
                 dbc.Card(dbc.CardBody([
                     section_header("Top 10 Products by Revenue"),
                     html.Div(table, className="table-wrapper"),
+                ]), className="dash-card"),
+                xs=12,
+            ),
+        ], className="mb-3"),
+    ])
+
+
+# ──────────────────────────────────────────────
+# TAB 4 — CRYPTO LIVE (reads pipeline.py's SQLite output)
+# ──────────────────────────────────────────────
+
+def build_crypto(snapshot_df: pd.DataFrame, history_df: pd.DataFrame) -> html.Div:
+    if snapshot_df.empty:
+        return html.Div([
+            dbc.Alert(
+                [
+                    html.Strong("No live crypto data yet. "),
+                    "This tab reads the SQLite table that ",
+                    html.Code("pipeline.py"),
+                    " writes to. Run ",
+                    html.Code("python pipeline.py"),
+                    " in a separate terminal, then switch back to this tab "
+                    "(or click it again) to pick up the first batch.",
+                ],
+                color="warning",
+                className="mb-3",
+            )
+        ])
+
+    # ── KPI cards for the top 4 assets by market cap ──
+    top_assets = snapshot_df.head(4)
+    kpi_row = dbc.Row([
+        kpi_card(
+            row["symbol"],
+            f"${row['priceUsd']:,.2f}",
+            delta=f"{row['changePercent24Hr']:+.2f}%",
+            icon="\U0001FA99",
+            color=SUCCESS if row["changePercent24Hr"] >= 0 else DANGER,
+        )
+        for _, row in top_assets.iterrows()
+    ], className="mb-3 g-3")
+
+    # ── Live price history for the top 5 assets by market cap ──
+    top_symbols = snapshot_df.head(5)["symbol"].tolist()
+    hist = history_df[history_df["symbol"].isin(top_symbols)]
+    fig_price = go.Figure()
+    for sym in top_symbols:
+        s = hist[hist["symbol"] == sym]
+        fig_price.add_trace(go.Scatter(
+            x=s["timestamp"], y=s["priceUsd"], name=sym, mode="lines+markers",
+        ))
+    apply_theme(fig_price, "Live Price History (each point = one pipeline.py polling batch)")
+
+    # ── Market cap bar (top 10) ──
+    top10 = snapshot_df.head(10)
+    fig_mcap = px.bar(
+        top10, x="marketCapUsd", y="symbol", orientation="h",
+        color="marketCapUsd", color_continuous_scale=[[0, "#312e81"], [1, ACCENT2]],
+        text=top10["marketCapUsd"].apply(lambda v: f"${v:,.0f}"),
+    )
+    fig_mcap.update_traces(textposition="outside", marker_line_width=0)
+    fig_mcap.update_coloraxes(showscale=False)
+    apply_theme(fig_mcap, "Market Cap — Top 10")
+
+    return html.Div([
+        kpi_row,
+        dbc.Row([
+            dbc.Col(
+                dbc.Card(dbc.CardBody([
+                    section_header("Live Price History", "Top 5 assets by market cap"),
+                    loading_chart("chart-crypto-price", dcc.Graph(id="chart-crypto-price",
+                                                                   figure=fig_price, config={"displayModeBar": False})),
+                ]), className="dash-card"),
+                xs=12,
+            ),
+        ], className="mb-3"),
+        dbc.Row([
+            dbc.Col(
+                dbc.Card(dbc.CardBody([
+                    section_header("Market Cap"),
+                    loading_chart("chart-crypto-mcap", dcc.Graph(id="chart-crypto-mcap",
+                                                                  figure=fig_mcap, config={"displayModeBar": False})),
                 ]), className="dash-card"),
                 xs=12,
             ),

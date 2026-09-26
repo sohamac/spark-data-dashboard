@@ -6,7 +6,9 @@ and returns a Pandas DataFrame ready for Plotly.
 """
 from __future__ import annotations
 import os
-from typing import Optional, Tuple
+import sqlite3
+from typing import Optional, Tuple, List
+import pandas as pd
 from pyspark.sql import SparkSession, DataFrame as SparkDF
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
@@ -15,6 +17,22 @@ from pyspark.sql.types import (
 )
 
 PROCESSED_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
+
+# Default location of the SQLite DB that the standalone pipeline.py process
+# writes to. Resolved relative to this file so it works regardless of the
+# working directory app.py or pipeline.py is launched from.
+DEFAULT_CRYPTO_DB_PATH = os.path.join(os.path.dirname(__file__), "..", "crypto_data.db")
+
+CRYPTO_SCHEMA = StructType([
+    StructField("id", StringType(), True),
+    StructField("symbol", StringType(), True),
+    StructField("name", StringType(), True),
+    StructField("priceUsd", DoubleType(), True),
+    StructField("marketCapUsd", DoubleType(), True),
+    StructField("volumeUsd24Hr", DoubleType(), True),
+    StructField("changePercent24Hr", DoubleType(), True),
+    StructField("timestamp", StringType(), True),
+])
 
 
 def _ensure_dir(path: str) -> None:
@@ -49,6 +67,40 @@ def load_inventory(spark: SparkSession, csv_path: str) -> SparkDF:
         spark.read.option("header", True).option("inferSchema", True)
         .csv(csv_path)
     )
+
+
+def load_crypto_metrics(spark: SparkSession, db_path: Optional[str] = None) -> SparkDF:
+    """Load the rows the standalone `pipeline.py` process has written to SQLite.
+
+    pipeline.py and app.py are two separate processes with two separate
+    SparkSessions -- there's no live in-memory link between them. This function
+    is the actual connection: it re-reads pipeline.py's SQLite output fresh
+    each time it's called, so the dashboard reflects whatever pipeline.py has
+    ingested so far.
+
+    Returns an empty (but correctly-schema'd) Spark DataFrame if the DB or
+    table doesn't exist yet, so the dashboard can render a friendly empty
+    state instead of crashing when pipeline.py hasn't been started.
+    """
+    db_path = db_path or DEFAULT_CRYPTO_DB_PATH
+
+    if not os.path.exists(db_path):
+        return spark.createDataFrame([], schema=CRYPTO_SCHEMA)
+
+    conn = sqlite3.connect(db_path)
+    try:
+        pdf = pd.read_sql("SELECT * FROM crypto_metrics", conn)
+    except (pd.errors.DatabaseError, sqlite3.OperationalError):
+        # Table doesn't exist yet -- pipeline.py hasn't written a batch.
+        pdf = pd.DataFrame(columns=[f.name for f in CRYPTO_SCHEMA.fields])
+    finally:
+        conn.close()
+
+    if pdf.empty:
+        return spark.createDataFrame([], schema=CRYPTO_SCHEMA)
+
+    pdf["timestamp"] = pdf["timestamp"].astype(str)
+    return spark.createDataFrame(pdf[[f.name for f in CRYPTO_SCHEMA.fields]], schema=CRYPTO_SCHEMA)
 
 
 # ──────────────────────────────────────────────
@@ -123,7 +175,7 @@ def revenue_by_category(txn: SparkDF) -> "pd.DataFrame":
 # ──────────────────────────────────────────────
 
 def heatmap_activity(sess: SparkDF) -> "pd.DataFrame":
-    """Sessions count by day_of_week × hour → pivot table."""
+    """Sessions count by day_of_week x hour -> pivot table."""
     grouped = (
         sess.groupBy("day_of_week", "hour")
         .agg(F.count("session_id").alias("sessions"))
@@ -210,7 +262,43 @@ def inventory_health(inv: SparkDF) -> "pd.DataFrame":
 
 
 # ──────────────────────────────────────────────
-# 5. FILTERED TRANSFORMS (called by callbacks)
+# 5. CRYPTO TRANSFORMS (pipeline.py integration)
+# ──────────────────────────────────────────────
+
+def crypto_latest_snapshot(crypto: SparkDF) -> "pd.DataFrame":
+    """Most recent ingested row per symbol, sorted by market cap."""
+    empty_cols = ["id", "symbol", "name", "priceUsd", "marketCapUsd",
+                  "volumeUsd24Hr", "changePercent24Hr", "timestamp"]
+    if crypto.rdd.isEmpty():
+        return pd.DataFrame(columns=empty_cols)
+
+    window = Window.partitionBy("symbol").orderBy(F.desc("timestamp"))
+    return (
+        crypto.withColumn("rn", F.row_number().over(window))
+        .filter(F.col("rn") == 1)
+        .drop("rn")
+        .orderBy(F.desc("marketCapUsd"))
+        .toPandas()
+    )
+
+
+def crypto_price_history(crypto: SparkDF, symbols: Optional[List[str]] = None) -> "pd.DataFrame":
+    """Price history across ingestion batches, optionally filtered to a symbol list."""
+    if crypto.rdd.isEmpty():
+        return pd.DataFrame(columns=["symbol", "timestamp", "priceUsd"])
+
+    df = crypto
+    if symbols:
+        df = df.filter(F.col("symbol").isin(symbols))
+    return (
+        df.select("symbol", "timestamp", "priceUsd")
+        .orderBy("timestamp")
+        .toPandas()
+    )
+
+
+# ──────────────────────────────────────────────
+# 6. FILTERED TRANSFORMS (called by callbacks)
 # ──────────────────────────────────────────────
 
 def apply_filters(

@@ -3,6 +3,10 @@ Spark Data Dashboard — Entry Point
 ====================================
 Run:  python app.py
 Open: http://localhost:8050
+
+For the live "Crypto Live" tab to show data, also run `python pipeline.py`
+in a separate terminal -- it polls a public crypto API, processes each batch
+with its own PySpark job, and writes to a local SQLite DB that this app reads.
 """
 import os
 import sys
@@ -29,7 +33,7 @@ from viz.components import filter_panel
 # 1. Generate synthetic data (skipped if CSVs already exist)
 # ────────────────────────────────────────────────────────────────────────────
 print("\n╔══════════════════════════════════════════════╗")
-print("║      ⚡ Spark Data Dashboard  v1.0           ║")
+print("║      ⚡ Spark Data Dashboard  v1.1           ║")
 print("╚══════════════════════════════════════════════╝\n")
 
 paths = generate_all()
@@ -55,6 +59,12 @@ inv_df.cache()
 txn_count  = txn_df.count()
 sess_count = sess_df.count()
 print(f"[Spark] Loaded {txn_count:,} transactions + {sess_count:,} sessions ✓\n")
+
+if os.path.exists(T.DEFAULT_CRYPTO_DB_PATH):
+    print("[Crypto] Found pipeline.py's SQLite DB — Crypto Live tab will show data.\n")
+else:
+    print("[Crypto] No pipeline.py output found yet — run `python pipeline.py` "
+          "in another terminal to populate the Crypto Live tab.\n")
 
 # ────────────────────────────────────────────────────────────────────────────
 # 3. Share state with callbacks module
@@ -124,9 +134,10 @@ app.layout = html.Div(id="app-shell", children=[
             id="main-tabs",
             active_tab="tab-overview",
             children=[
-                dbc.Tab(label="📊  Overview",   tab_id="tab-overview"),
-                dbc.Tab(label="📈  Trends",     tab_id="tab-trends"),
-                dbc.Tab(label="🔍  Deep Dive",  tab_id="tab-deep-dive"),
+                dbc.Tab(label="📊  Overview",    tab_id="tab-overview"),
+                dbc.Tab(label="📈  Trends",      tab_id="tab-trends"),
+                dbc.Tab(label="🔍  Deep Dive",   tab_id="tab-deep-dive"),
+                dbc.Tab(label="🪙  Crypto Live", tab_id="tab-crypto"),
             ],
         ),
 
